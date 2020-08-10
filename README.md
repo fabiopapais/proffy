@@ -27,6 +27,9 @@ Proffy is an application where you can find teachers from many different areas a
 
 ## Install
 
+OBS.: The project already comes with some sample data in the **database.sqlite** and in the **uploads** folder,
+feell free to delete this content.
+
 1. **Server** dependencies
     1. `cd server`
     2. `yarn install`
