@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img alt="proffy Logo" src="./web/src/assets/images/logo.svg" width="35%" />
+    <img alt="proffy Logo"  src="./logo.svg" width="35%" />
 </h1>
 
 Proffy is an application where you can find teachers from many different areas and see their price/hour to start a "connection" (conversation). The backend (server) and the frontend (web, mobile) were made using Typescript; you can see all the technologies and dependecies of the project in the package.json of each section. This project was done during Next Level Week # 2 omnistack track, promoted by [Rocketseat](https://github.com/rocketseat), taught by [@diego3g](https://github.com/diego3g).
