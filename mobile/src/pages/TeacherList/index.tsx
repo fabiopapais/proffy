@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { View, ScrollView, Text, TextInput } from 'react-native'
 import { BorderlessButton, RectButton } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage'
+import { Picker } from '@react-native-community/picker'
+
 
 import api from '../../services/api'
 
@@ -50,7 +52,7 @@ function TeacherList() {
         const response = await api.get('/classes', {
             params: {
                 subject,
-                week_day: weekDay,
+                week_day: Number(weekDay),
                 time
             }
         })
@@ -78,16 +80,24 @@ function TeacherList() {
                     />
 
                     <View style={styles.inputGroup}>
-                        <View style={styles.inputBlock}>
+                        <View style={styles.inputBlock1}>
                             <Text style={styles.label}>Dia da semana</Text>
-                            <TextInput
-                                placeholderTextColor="#c1bccc"
-                                style={styles.input}
-                                placeholder="Qual o dia?"
-                                onChangeText={text => setWeekDay(text)}
-                            />
+                            <View style={styles.input}>
+                                <Picker
+                                    prompt="Que dia?"
+                                    selectedValue={weekDay}
+                                    onValueChange={item => setWeekDay(String(item))}>
+                                    <Picker.Item label="Segunda-feira" value="0" />
+                                    <Picker.Item label="Terça-feira" value="1" />
+                                    <Picker.Item label="Quarta-feira" value="2" />
+                                    <Picker.Item label="Quinta-feira" value="3" />
+                                    <Picker.Item label="Sexta-feira" value="4" />
+                                    <Picker.Item label="Sábado-feira" value="5" />
+                                    <Picker.Item label="Domingo" value="6" />
+                                </Picker>
+                            </View>
                         </View>
-                        <View style={styles.inputBlock}>
+                        <View style={styles.inputBlock2}>
                             <Text style={styles.label}>Horário</Text>
                             <TextInput
                                 placeholderTextColor="#c1bccc"
@@ -117,7 +127,8 @@ function TeacherList() {
                             teacher={teacher}
                             favorited={favorites.includes(teacher.id)}
                         />
-                    )})}
+                    )
+                })}
             </ScrollView>
         </View>
     )

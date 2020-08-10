@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+require('dotenv').config()
 
 import db from '../database/connection'
 import convertHourToMinutes from '../utils/convertHourToMinutes'
@@ -13,15 +14,15 @@ export default class ClassesController {
     async index(req: Request, res: Response) {
         const filters = req.query
 
-        const subject = filters.subject as string
-        const week_day = filters.week_day as string
-        const time = filters.time as string
-
         if (!filters.week_day || !filters.subject || !filters.time) {
             return res.status(400).json({ error: "Missing filters" })
         }
 
-        const timeInMinutes = convertHourToMinutes(filters.time as string)
+        const subject = filters.subject as string
+        const week_day = filters.week_day as string
+        const time = filters.time as string
+
+        const timeInMinutes = convertHourToMinutes(time as string)
 
         const classes = await db('classes')
             .whereExists(function() {
@@ -35,12 +36,20 @@ export default class ClassesController {
             .where('classes.subject', '=', subject)  
             .join('users', 'classes.user_id', '=', 'users.id')
             .select(['classes.*', 'users.*'])
+
+            const serializedClasses = classes.map(serializedClass => {
+                return {
+                    ...serializedClass,
+                    avatar: `http://${process.env.DOMAIN}:3333/uploads/${serializedClass.avatar}`
+                }
+            })
         
-        return res.json(classes)
+        return res.json(serializedClasses)
     }
 
     async create(req: Request, res: Response) {
-        const { name, avatar, whatsapp, bio, subject, cost, schedule } = req.body
+        const { name, whatsapp, bio, subject, cost, schedule } = req.body
+        const avatar = req.file.filename
 
         const transaction = await db.transaction()
 
@@ -55,12 +64,12 @@ export default class ClassesController {
 
             const insertedClassesId = await transaction('classes').insert({
                 subject,
-                cost,
+                cost: Number(cost),
                 user_id
             })
             const class_id = insertedClassesId[0]
 
-            const classSchedule = schedule.map((scheduleItem: ScheduleItem) => {
+            const classSchedule = JSON.parse(schedule).map((scheduleItem: ScheduleItem) => {
                 return {
                     class_id,
                     week_day: scheduleItem.week_day,

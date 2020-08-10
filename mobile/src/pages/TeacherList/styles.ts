@@ -28,8 +28,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    inputBlock: {
-        width: '48%'
+    inputBlock1: {
+        width: '58%'
+    },
+    inputBlock2: {
+        width: '38%'
     },
     submitButton: {
         backgroundColor: '#04d361',

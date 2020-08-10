@@ -11,8 +11,9 @@
     align-items: center;
 }
 .teacher-item header img {
-    width: 8rem;
-    height: 8rem;
+    width: 10rem;
+    height: 10rem;
+    object-fit: cover;
     border-radius: 50%;
 }
 .teacher-item header div {

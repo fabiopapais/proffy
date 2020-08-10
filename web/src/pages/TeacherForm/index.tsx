@@ -1,9 +1,12 @@
 import React, { useState, FormEvent } from 'react'
 import { useHistory } from 'react-router-dom'
+import { MdClose } from 'react-icons/md'
+
 import PageHeader from '../../components/PageHeader'
 import Input from '../../components/Input'
 import Textarea from '../../components/Textarea'
 import Select from '../../components/Select'
+import Dropzone from '../../components/Dropzone'
 
 import warningIcon from '../../assets/images/icons/warning.svg'
 
@@ -12,6 +15,8 @@ import api from '../../services/api'
 
 function TeacherForm() {
     const history = useHistory()
+
+    const [selectedFile, setSelectedFile] = useState<File>()
 
     const [name, setName] = useState('')
     const [avatar, setAvatar] = useState('')
@@ -32,6 +37,14 @@ function TeacherForm() {
         ])
     }
 
+    function handleDeleteNewSchedule(item: any) {
+        const filteredSchedule = scheduleItems.filter(scheduleItem => {
+            return scheduleItem != item
+        })
+        setScheduleItems(filteredSchedule)
+        console.log(scheduleItems)
+    }
+
     function setScheduleItemValue(position: number, field: string, value: string) {
         const tmp_schedulesItems = scheduleItems.map((scheduleItem, index) => {
             if (index === position) {
@@ -42,24 +55,29 @@ function TeacherForm() {
         setScheduleItems(tmp_schedulesItems)
     }
 
-    function handleCreateClass(e: FormEvent) {
+    function handleCreateUser(e: FormEvent) {
         e.preventDefault() // Previne o comportamento padrão de um form (reload)
 
-        api.post('/classes', {
-            name,
-            avatar,
-            whatsapp,
-            bio,
-            subject,
-            cost: Number(cost),
-            schedule: scheduleItems
-        }).then(() => {
+        const data = new FormData()
+
+        data.append('name', name)
+        data.append('whatsapp', whatsapp)
+        data.append('bio', bio)
+        data.append('subject', subject)
+        data.append('cost', cost)
+        data.append('schedule', JSON.stringify(scheduleItems))
+
+        if (selectedFile) {
+            data.append('avatar', selectedFile)
+        } else {
+            alert('Ooops! Por favor insira uma imagem do Ponto de Coleta')
+            return;
+        }
+
+        api.post('/classes', data).then(() => {
             alert('Cadastro realizado com sucesso!')
             history.push('/')
-        }).catch(() => {
-            alert("Errrrrou!")
         })
-
     }
 
     return (
@@ -70,21 +88,22 @@ function TeacherForm() {
             />
 
             <main>
-                <form onSubmit={handleCreateClass}>
+                <form onSubmit={handleCreateUser}>
                     <fieldset>
                         <legend>Seus dados</legend>
+                        <Dropzone onFileUploaded={setSelectedFile} />
                         <Input
                             name="name"
                             label="Nome completo"
                             value={name}
                             onChange={(e) => { setName(e.target.value) }}
                         />
-                        <Input
+                        {/* <Input
                             name="avatar"
                             label="Avatar"
                             value={avatar}
                             onChange={(e) => { setAvatar(e.target.value) }}
-                        />
+                        /> */}
                         <Input
                             name="whatsapp"
                             label="Whatsapp"
@@ -163,6 +182,7 @@ function TeacherForm() {
                                         value={scheduleItem.to}
                                         onChange={e => setScheduleItemValue(index, 'to', e.target.value)}
                                     />
+                                    <button onClick={() => handleDeleteNewSchedule(scheduleItem)} type="button" ><MdClose /></button>
                                 </div>
                             )
                         })}
