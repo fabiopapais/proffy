@@ -16,19 +16,19 @@ Proffy is an application where you can find teachers from many different areas a
 
 <h3 align="center">
     <b>Web</b> <br/>
-    <img alt="Web Demo" src="./proffy-demo-web.gif" width="80%" />
+    <img alt="Web Demo" src="./demo-proffy-web.gif" width="80%" />
 </h3>
 
 <h3 align="center">
     <b>Mobile</b> <br/>
-    <img alt="Web Demo" src="./proffy-demo-mobile.gif" width="30%" /> <br/>
+    <img alt="Mobile Demo" src="./demo-proffy-mobile.gif" width="30%" /> <br/>
 <img align="center" title="Runs with expo" alt="Runs with expo" src="https://img.shields.io/badge/Runs%20with%20Expo-000.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000">
 </h3>
 
 ## Install
 
 OBS.: The project already comes with some sample data in the **database.sqlite** and in the **uploads** folder,
-feell free to delete this content.
+fell free to delete this content.
 
 1. **Server** dependencies
     1. `cd server`
